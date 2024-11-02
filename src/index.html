@@ -1,0 +1,84 @@
+<!doctype html>
+<html>
+
+<head>
+	<title>Bible</title>
+	<script type="text/javascript" src="http://code.jquery.com/jquery-1.7.1.min.js"></script>
+	<script type="text/javascript" src="../../turn.min.js"></script>
+	<link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+	<div id="book">
+	</div>
+
+	<div id="controls">
+		<label for="page-number">Page:</label> <input type="text" size="3" id="page-number"> of <span
+			id="number-pages"></span>
+	</div>
+
+	<script type="text/javascript">
+		var numberOfPages = 1000;
+
+		// Adds the pages that the book will need
+		function addPage(page, book) {
+			// 	First check if the page is already in the book
+			if (!book.turn('hasPage', page)) {
+				// Create an element for this page
+				var element = $('<div />', { 'class': 'page ' + ((page % 2 == 0) ? 'odd' : 'even'), 'id': 'page-' + page }).html('<i class="loader"></i>');
+				// If not then add the page
+				book.turn('addPage', element, page);
+				// 修改加载逻辑，根据页码加载对应的文件
+				$.get(`pages/${page}.html`, function (data) {
+					element.html(data);
+				}).fail(function () {
+					// 如果特定页面文件不存在，回退到默认的output.html
+					element.html('<div class="data">Data for page ' + page + '</div>');
+				});
+			}
+		}
+
+		$(window).ready(function () {
+			$('#book').turn({
+				acceleration: true,
+				pages: numberOfPages,
+				elevation: 150,
+				gradients: !$.isTouch,
+				when: {
+					turning: function (e, page, view) {
+
+						// Gets the range of pages that the book needs right now
+						var range = $(this).turn('range', page);
+
+						// Check if each page is within the book
+						for (page = range[0]; page <= range[1]; page++)
+							addPage(page, $(this));
+					},
+
+					turned: function (e, page) {
+						$('#page-number').val(page);
+					}
+				}
+			});
+
+			$('#number-pages').html(numberOfPages);
+
+			$('#page-number').keydown(function (e) {
+
+				if (e.keyCode == 13)
+					$('#book').turn('page', $('#page-number').val());
+
+			});
+		});
+
+		$(window).bind('keydown', function (e) {
+			if (e.target && e.target.tagName.toLowerCase() != 'input')
+				if (e.keyCode == 37)
+					$('#book').turn('previous');
+				else if (e.keyCode == 39)
+					$('#book').turn('next');
+		});
+	</script>
+</body>
+
+</html>

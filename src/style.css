@@ -1,0 +1,67 @@
+body {
+    background: #ccc;
+}
+
+#book {
+    width: 800px;
+    height: 500px;
+}
+
+#book .turn-page {
+    background-color: white;
+}
+
+#book .loader {
+    background-image: url(assets/loader.gif);
+    width: 24px;
+    height: 24px;
+    display: block;
+    position: absolute;
+    top: 238px;
+    left: 188px;
+}
+
+#book .data {
+    text-align: center;
+    font-size: 40px;
+    color: #999;
+    line-height: 500px;
+}
+
+#book .book-content {
+    font-family: "Stempel-Garamond-W01-Roman";
+    font-size: 16px;
+    margin: 70px 40px;
+}
+
+#book p {
+    text-indent: 2em;
+    line-height: 22px;
+    margin: 20px 0;
+}
+
+#controls {
+    width: 800px;
+    text-align: center;
+    margin: 20px 0px;
+    font: 30px arial;
+}
+
+#controls input,
+#controls label {
+    font: 30px arial;
+}
+
+#book .odd {
+    background-image: -webkit-linear-gradient(left, #FFF 95%, #ddd 100%);
+    background-image: -moz-linear-gradient(left, #FFF 95%, #ddd 100%);
+    background-image: -o-linear-gradient(left, #FFF 95%, #ddd 100%);
+    background-image: -ms-linear-gradient(left, #FFF 95%, #ddd 100%);
+}
+
+#book .even {
+    background-image: -webkit-linear-gradient(right, #FFF 95%, #ddd 100%);
+    background-image: -moz-linear-gradient(right, #FFF 95%, #ddd 100%);
+    background-image: -o-linear-gradient(right, #FFF 95%, #ddd 100%);
+    background-image: -ms-linear-gradient(right, #FFF 95%, #ddd 100%);
+}
