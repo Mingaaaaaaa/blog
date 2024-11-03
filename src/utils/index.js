@@ -1,35 +1,23 @@
-const puppeteer = require('puppeteer');
+const fs = require('fs');
+const path = require('path');
+const { readMarkdownFiles } = require('./readmd');
+const { outputHtmlFiles } = require('./writehtml');
+const { convertMarkdownToHtml } = require('./md2html');
+const { partitionHtmlByHeightWithFixedWidth } = require('./splithtml');
 
-async function getElementHeight(html) {
-    const browser = await puppeteer.launch();
-    const page = await browser.newPage();
-    await page.setContent(html);
-    const height = await page.evaluate(() => {
-        const container = document.querySelector('.container');
-        return container ? container.clientHeight : 0;
-    });
-    await browser.close();
-    return height;
-}
+const pageHeight = 350;
+const pageWidth = 400;
+const outputDir = path.join(__dirname, '..', 'pages');
+const contentDir = path.join(__dirname, '..', '..', 'content');
 
-const html = `
-<!DOCTYPE html>
-<html>
-<head>
-  <style>
-    .container {
-      width: 300px;
-      padding: 20px;
-      background-color: lightgray;
-    }
-  </style>
-</head>
-<body>
-  <div class="container">Hello, World!</div>
-</body>
-</html>
-`;
-
-getElementHeight(html).then(height => {
-    console.log(`Element height: ${height}px`);
-});
+(async () => {
+  const mdFiles = readMarkdownFiles(contentDir);
+  fs.rmSync(outputDir, { recursive: true, force: true });
+  
+  for (const mdFile of mdFiles) {
+    const html = convertMarkdownToHtml(mdFile);
+    const partitions = await partitionHtmlByHeightWithFixedWidth(html, pageHeight, pageWidth);
+    outputHtmlFiles(partitions, outputDir);
+    console.log(`${mdFile} converted and paginated HTML files generated successfully.`);
+  }
+})();
