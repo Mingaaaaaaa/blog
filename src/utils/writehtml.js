@@ -9,7 +9,6 @@ function outputHtmlFiles(partitions, outputDir) {
     const fileCount = fs.readdirSync(outputDir).length;
     partitions.forEach((partition, index) => {
         const pageNumber = fileCount + index + 1;
-        console.log(`Processing page ${pageNumber}`, partition);
         const htmlContent = partition.join('');
         const finalHtml = `<div class="book-content">${htmlContent}</div>`;
         const outputFilePath = path.join(outputDir, `${pageNumber}.html`);

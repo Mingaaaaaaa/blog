@@ -35,9 +35,19 @@ body {
 }
 
 #book p {
+    margin: 20px 0;
     text-indent: 2em;
     line-height: 22px;
-    margin: 20px 0;
+}
+ 
+
+#book .no-indent {
+    text-indent: 0;
+}
+
+#book img {
+    max-width: 90%;
+    height: auto;
 }
 
 #controls {

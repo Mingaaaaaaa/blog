@@ -2,9 +2,8 @@ const fs = require('fs');
 const path = require('path');
 
 function readMarkdownFiles(contentDir) {
-    const orderedFiles = ['cover.md', 'about.md', 'nav.md', 'blogs', 'memos', 'friends.md'];
-    
     const mdFiles = [];
+    const orderedFiles = ['cover.md', 'about.md', 'nav.md', 'blogs', 'memos', 'friends.md'];
 
     for (const item of orderedFiles) {
         const itemPath = path.join(contentDir, item);
@@ -19,7 +18,6 @@ function readMarkdownFiles(contentDir) {
             }
         }
     }
-
     return mdFiles;
 }
 
