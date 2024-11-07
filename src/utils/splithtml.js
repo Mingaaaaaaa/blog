@@ -20,28 +20,31 @@ async function initializeBrowser(containerWidth) {
                 #book {
                     width: 800px;
                     height: 500px;
-                }
-
-                #book  {
-                    font-family: "Stempel-Garamond-W01-Roman";
                     font-size: 16px;
                     padding: 52px 40px;
+                    font-family: "Stempel-Garamond-W01-Roman";
                 }
 
                 #book p {
                     margin: 20px 0;
-                    text-indent: 2em;
+                    text-indent: 32px;
                     line-height: 22px;
                 }
                 
-                #book .no-indent {
+                .no-indent {
                     text-indent: 0;
                 }
 
                 #book img {
                     max-width: 90%;
                     height: auto;
-                }       
+                }   
+
+                .split-container p {
+                    font-size: 16px;
+                    text-indent: 2em;
+                }
+ 
             </style>
         </head>
         <body id="book">
@@ -92,7 +95,7 @@ async function getElementHeight(page, elementHtml, limitWidth) {
 
         document.body.removeChild(tempDiv);
         console.log('Top-level element:', html, height, marginTop, marginBottom);
-        return height + marginTop + marginBottom;
+        return height + marginBottom;
     }, elementHtml, limitWidth);
 
     // Retrieve HTML of each child element in an array
@@ -145,7 +148,7 @@ async function getElementsInfo(page, htmlString, limitWidth) {
 }
 
 // 处理分行
-async function splitParagraphIntoLines(page, content, containerWidth, leftHeight) {
+async function splitParagraphIntoTwoParts(page, content, containerWidth, leftHeight) {
     await page.setContent(`
         <div class="split-container" style="width: ${containerWidth}px;">${content}</div>
     `);
@@ -156,7 +159,7 @@ async function splitParagraphIntoLines(page, content, containerWidth, leftHeight
         let nexContent = '';
         let cumulativeHeight = 0;
 
-        // Helper function to measure height of a given HTML snippet
+        // 测量高度的辅助函数
         const measureHeight = (html) => {
             const tempDiv = document.createElement('div');
             tempDiv.style.width = container.style.width;
@@ -167,35 +170,37 @@ async function splitParagraphIntoLines(page, content, containerWidth, leftHeight
             return height;
         };
 
-        // Recursive function to process nested nodes
+        // 处理节点的递归函数
         const processNode = (node) => {
-            let nodeHeight = 0;
-
             if (node.nodeType === Node.TEXT_NODE) {
-                // 按字符分割文本
+                // 处理纯文本节点
                 const chars = node.textContent.split('');
                 let tempText = '';
-
                 let lastMeasuredHeight = 0;
+
                 for (const char of chars) {
                     tempText += char;
-                    const testHtml = `<span>${tempText}</span>`;
-                    nodeHeight = measureHeight(testHtml);
-                    console.log(char, nodeHeight, lastMeasuredHeight)
-                    // 只有当高度发生变化时才累加
+                    const testHtml = `<p style="text-indent:2em">${tempText}</p>`;
+                    const nodeHeight = measureHeight(testHtml);
+
                     if (nodeHeight > lastMeasuredHeight) {
                         if (cumulativeHeight + (nodeHeight - lastMeasuredHeight) <= leftHeight) {
                             cumulativeHeight += (nodeHeight - lastMeasuredHeight);
                             lastMeasuredHeight = nodeHeight;
                         } else {
-                            // 回退一个字符,因为这个字符导致超出高度
+                            // 超出高度限制,回退一个字符
                             tempText = tempText.slice(0, -1);
-                            nexContent += chars.slice(chars.indexOf(char)).join("");
+                            // 将剩余文本添加到下一页,添加no-indent类
+                            nexContent += `<p class="no-indent">${chars.slice(chars.indexOf(char)).join('')}</p>`;
                             break;
                         }
                     }
                 }
-                if (tempText) curContent += `<span>${tempText}</span>`;
+
+                if (tempText) {
+                    curContent += tempText;
+                }
+
             } else if (node.nodeType === Node.ELEMENT_NODE) {
                 if (node.tagName === 'IMG') {
                     // 处理图片
@@ -203,24 +208,19 @@ async function splitParagraphIntoLines(page, content, containerWidth, leftHeight
                     const originalWidth = node.getBoundingClientRect().width;
                     const remainingSpace = leftHeight - cumulativeHeight;
 
-                    // 如果剩余空间不足原始高度的50%,移到下一页
                     if (remainingSpace < originalHeight * 0.3) {
+                        // 剩余空间不足,移至下一页
                         nexContent += node.outerHTML;
-                    }
-                    // 如果图片高度超过页面高度,进行等比缩放
-                    else if (originalHeight > leftHeight) {
+                    } else if (originalHeight > leftHeight) {
+                        // 图片过高,等比缩放
                         const scaledImg = node.cloneNode(true);
-                        const scale = leftHeight / originalHeight;
-                        // scaledImg.style.transform = `scale(${scale})`;
-                        scaledImg.style.transformOrigin = 'top left';
                         if (originalWidth > container.clientWidth) {
                             scaledImg.style.width = '100%';
                         }
                         curContent += scaledImg.outerHTML;
                         cumulativeHeight += leftHeight;
-                    }
-                    // 如果剩余空间不多但足够放置缩小后的图片
-                    else if (remainingSpace < originalHeight) {
+                    } else if (remainingSpace < originalHeight) {
+                        // 剩余空间不足,等比缩放
                         const scaledImg = node.cloneNode(true);
                         const scale = remainingSpace / originalHeight;
                         scaledImg.style.transform = `scale(${scale})`;
@@ -230,9 +230,8 @@ async function splitParagraphIntoLines(page, content, containerWidth, leftHeight
                         }
                         curContent += scaledImg.outerHTML;
                         cumulativeHeight += remainingSpace;
-                    }
-                    // 空间充足,直接放置
-                    else {
+                    } else {
+                        // 空间充足,直接放置
                         const scaledImg = node.cloneNode(true);
                         if (originalWidth > container.clientWidth) {
                             scaledImg.style.width = '100%';
@@ -241,29 +240,30 @@ async function splitParagraphIntoLines(page, content, containerWidth, leftHeight
                         cumulativeHeight += originalHeight;
                     }
                 } else {
-                    // Handle nested elements (like spans inside <p>)
+                    // 处理其他元素
                     const childHtml = node.outerHTML;
-                    nodeHeight = measureHeight(childHtml);
+                    const nodeHeight = measureHeight(childHtml);
 
                     if (cumulativeHeight + nodeHeight <= leftHeight) {
                         curContent += childHtml;
                         cumulativeHeight += nodeHeight;
                     } else {
-                        nexContent += childHtml;
+                        // 添加no-indent类到下一页内容
+                        nexContent += childHtml.replace(/<p/g, '<p class="no-indent"');
                     }
                 }
             }
         };
 
-        // Process each child node of the container
+        // 处理容器中的每个子节点
         container.childNodes.forEach(node => {
-            console.log(node,cumulativeHeight,leftHeight)
-
             if (cumulativeHeight <= leftHeight) {
                 processNode(node);
             } else {
-                // Append any remaining elements to nexContent if the height is exceeded
-                nexContent += node.outerHTML;
+                // 超出高度限制的内容移至下一页,添加no-indent类
+                nexContent += node.nodeType === Node.ELEMENT_NODE ?
+                    node.outerHTML.replace(/<p/g, '<p class="no-indent"') :
+                    `<p class="no-indent">${node.textContent}</p>`;
             }
         });
 
@@ -296,19 +296,18 @@ async function partitionHtmlByHeightWithFixedWidth(htmlString, targetHeight, con
 
     while (index < elements.length) {
         let element = elements[index];
-        console.log(element.tag, element.content, element.height, currentHeight + element.height > targetHeight);
+        console.log(element.tag, element.content, element.height, targetHeight - currentHeight);
 
         if (currentHeight + element.height > targetHeight) {
             if (element.tag === 'p') {
                 let remainingContent = element.content;
                 while (remainingContent) {
-                    const lines = await splitParagraphIntoLines(page, remainingContent, containerWidth, targetHeight - currentHeight);
+                    const lines = await splitParagraphIntoTwoParts(page, remainingContent, containerWidth, targetHeight - currentHeight);
                     console.log('lines', lines);
                     let [curContent, overflowContent] = lines;
 
-                    const curHtml = `<p>${curContent}</p>`;
-                    currentPartition.push(curHtml);
-                    currentHeight += await getLineHeight(page, curHtml, containerWidth);
+                    currentPartition.push(`<p>${curContent}</p>`);
+                    currentHeight += await getLineHeight(page, `<p>${curContent}</p>`, containerWidth);
 
                     if (overflowContent) {
                         result.push(currentPartition);

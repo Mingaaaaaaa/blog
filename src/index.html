@@ -2,19 +2,25 @@
 <html>
 
 <head>
-	<title>Bible</title>
+	<title>Alplune's Blog</title>
 	<script type="text/javascript" src="http://code.jquery.com/jquery-1.7.1.min.js"></script>
 	<script type="text/javascript" src="../../turn.min.js"></script>
 	<link rel="stylesheet" href="style.css">
 </head>
 
 <body>
-	<div id="book">
+	<div id="menu">
+		<i class="icon" id="content-table"></i>
+		<i class="icon" id="github"></i>
+		<i class="icon" id="email"></i>
+		<i class="icon" id="rss"></i>
 	</div>
 
-	<div id="controls">
-		<label for="page-number">Page:</label> <input type="text" size="3" id="page-number"> of <span
-			id="number-pages"></span>
+	<div id="book"></div>
+
+
+	<div id="slider">
+
 	</div>
 
 	<script type="text/javascript">
@@ -37,38 +43,46 @@
 				});
 			}
 		}
-
+		function getViewNumber(book, page) {
+			return parseInt((page || book.turn('page')) / 2 + 1, 10);
+		}
 		$(window).ready(function () {
 			$('#book').turn({
+				pages: 112,
+				width: 960,
+				height: 600,
+				elevation: 50,
+				duration: 1000,
 				autoCenter: true,
+				acceleration: true,
 				pages: numberOfPages,
-				elevation: 150,
 				gradients: !$.isTouch,
 				when: {
 					turning: function (e, page, view) {
-
-						// Gets the range of pages that the book needs right now
 						var range = $(this).turn('range', page);
-
 						// Check if each page is within the book
 						for (page = range[0]; page <= range[1]; page++)
 							addPage(page, $(this));
 					},
-
-					turned: function (e, page) {
-						$('#page-number').val(page);
+					start: function (e, pageObj, corner) {
+						var book = $(this);
+						if (pageObj.page == 2)
+							book.css({ backgroundPosition: '482px 0' });
+						else if (pageObj.page == book.turn('pages') - 1)
+							book.css({ backgroundPosition: '472px 0' });
+					},
+					end: function (e, pageObj) {
+						console.log('end')
+						var book = $(this);
+						bookshelf.moveBar(false);
+					},
+					turned: function (e, page, view) {
+						var book = $(this),
+							pages = book.turn('pages');
 					}
 				}
 			});
 
-			$('#number-pages').html(numberOfPages);
-
-			$('#page-number').keydown(function (e) {
-
-				if (e.keyCode == 13)
-					$('#book').turn('page', $('#page-number').val());
-
-			});
 		});
 
 		$(window).bind('keydown', function (e) {
