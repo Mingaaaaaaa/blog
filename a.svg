@@ -1,0 +1,42 @@
+<svg width="200" height="200" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+  <!-- 脸部轮廓 -->
+  <path class="face" d="M100,50 C130,50 150,80 150,110 C150,140 130,170 100,170 C70,170 50,140 50,110 C50,80 70,50 100,50 Z" fill="none" stroke="black" stroke-width="2"/>
+
+  <!-- 左眼 -->
+  <path class="eye" d="M75,100 C75,95 80,95 80,100 C80,105 75,105 75,100 Z" fill="none" stroke="black" stroke-width="2"/>
+
+  <!-- 右眼 -->
+  <path class="eye" d="M120,100 C120,95 125,95 125,100 C125,105 120,105 120,100 Z" fill="none" stroke="black" stroke-width="2"/>
+
+  <!-- 嘴巴 -->
+  <path class="mouth" d="M85,130 C95,140 105,140 115,130" fill="none" stroke="black" stroke-width="2"/>
+
+  <style>
+    /* 基本动画设置 */
+    path {
+      stroke-dasharray: 100; /* 可以设为路径的总长度 */
+      stroke-dashoffset: 100;
+      animation: draw 1s ease forwards;
+    }
+
+    /* 控制不同路径的动画顺序 */
+    .face {
+      animation-delay: 0s;
+    }
+     .face1 {
+      animation-delay: 0.5s;
+    }
+    .eye {
+      animation-delay: 1s;
+    }
+    .mouth {
+      animation-delay: 2s;
+    }
+
+    @keyframes draw {
+      to {
+        stroke-dashoffset: 0;
+      }
+    }
+  </style>
+</svg>
