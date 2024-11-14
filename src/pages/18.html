@@ -1,1 +1,22 @@
-<div class="book-content"><h1 class="p-title">test</h1><p class="create-time"> 2024/11/3</p><p>test memo</p></div><div class="page-number">18</div>
+<div class="page-title-odd">设计模式</div><div class="book-content"><pre><code class="javascript language-javascript">class Subject {
+
+  constructor() {
+    this.observerList = [];
+  }
+
+  addObserver(observer) {
+    this.observerList.push(observer);
+  }
+
+  removeObserver(observer) {
+    const index = this.observerList.findIndex(o =&gt; o.name === observer.name);
+    this.observerList.splice(index, 1);
+  }
+
+  notifyObservers(message) {
+    const observers = this.observeList;
+    observers.forEach(observer =&gt; observer.notified(message));
+  }
+
+}
+</code></pre></div><div class="page-number">18</div>

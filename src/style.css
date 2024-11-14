@@ -1,11 +1,22 @@
 body {
     background: #ccc;
+    overflow: hidden;
+}
+
+@keyframes openBook {
+    from {
+        transform: translateX(-480px);
+    }
+
+    to {
+        transform: translateX(0px);
+    }
 }
 
 #book {
-    width: 800px;
-    height: 500px;
-    margin: 0 auto;
+    animation-name: openBook;
+    animation-duration: 1s;
+    animation-timing-function: ease;
 
     .turn-page {
         background-color: white;
@@ -117,6 +128,12 @@ body {
         cursor: pointer;
         display: inline-block;
         background-size: contain;
+
+        &:hover {
+            transform: scale(1.15);
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
     }
 
     #content-table {
@@ -136,14 +153,182 @@ body {
     }
 }
 
-#controls {
-    width: 800px;
-    text-align: center;
-    margin: 20px 0px;
-    font: 30px arial;
+.nav-buttons {
+    display: flex;
+    justify-content: center;
 
-    input,
-    label {
-        font: 30px arial;
+    .nav-btn {
+        background-image: url(./assets/ARROW.svg);
+        width: 64px;
+        height: 64px;
+        background-size: contain;
+        background-repeat: no-repeat;
+        top: 300px;
+        position: relative;
+        z-index: 100;
     }
+
+    #prev-btn {
+        transform: rotateY(180deg) translateX(-40px);
+    }
+
+    #next-btn {
+        transform: translateX(-40px);
+    }
+}
+
+#slider-wrap {
+    padding: 5px 0px;
+    margin-top: 16px;
+
+    #slider {
+        width: 600px;
+        height: 8px;
+        background: rgba(0, 0, 0, 0.2);
+        -webkit-border-radius: 5px;
+        -moz-border-radius: 5px;
+        -o-border-radius: 5px;
+        -ms-border-radius: 5px;
+        border-radius: 5px;
+        margin: 20px auto;
+        height: 8px;
+        box-sizing: border-box;
+
+        #cur {
+            z-index: 0;
+            width: 80px;
+            height: 8px;
+            cursor: default;
+            -webkit-border-radius: 5px;
+            -moz-border-radius: 5px;
+            -ms-border-radius: 5px;
+            border-radius: 5px;
+            transition: all 0.7s ease-out;
+            border: 1px solid white;
+            background-color: black;
+            opacity: 0.2;
+        }
+    }
+}
+
+#page2 {
+    .author-info {
+        display: flex;
+        gap: 16px;
+        margin-bottom: 40px;
+    }
+
+    .author-info img {
+        width: 140px;
+        height: 140px;
+        border-radius: 50%;
+        border: solid lightgray;
+    }
+
+    .author-detail {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-evenly;
+    }
+
+    .author-detail div:first-child {
+        color: rgb(107 114 128);
+    }
+
+    .author-detail div:nth-child(2) {
+        font-size: 1.875rem;
+        line-height: 2.25rem;
+        font-weight: 700;
+        font-family: cursive;
+    }
+
+    .author-detail div:last-child {
+        font-family: cursive;
+    }
+
+    .about-me {
+        /* color: rgb(107 114 128); */
+    }
+}
+
+#p3 {
+    #list-wrap {
+        display: flex;
+        flex-direction: row;
+        align-items: start;
+        justify-content: space-between;
+    }
+
+    p {
+        text-indent: 0;
+    }
+
+    #blog,
+    #memo {
+        max-width: 44%;
+    }
+
+    #blog-list,
+    #memo-list {
+        flex: 1;
+        clear: both;
+    }
+
+    #divider {
+        width: 1px;
+        margin: 20px 20px;
+        align-self: stretch;
+        background-color: #999;
+    }
+
+    .desc {
+        float: right;
+        font-size: 14px;
+        align-self: end;
+        position: relative;
+        color: #999;
+        bottom: 20px;
+    }
+
+    .navi {
+        width: 100%;
+
+        &:hover {
+            cursor: pointer;
+            padding: 0 10px;
+            background-color: #edeaea;
+        }
+
+        border-radius: 10px;
+        transition: padding 0.3s ease;
+    }
+
+    #about-page {
+        float: right;
+        color: #999;
+        font-size: 1em;
+    }
+
+    #mdInfo {
+        display: flex;
+        justify-content: space-between;
+
+        #mdTitle {
+            align-self: flex-start;
+            color: #333;
+            font-size: 16px;
+            font-weight: bold;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+        }
+
+        #mdPage {
+            color: #999;
+            font-size: 14px;
+        }
+    }
+
+
+
 }

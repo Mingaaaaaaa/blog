@@ -3,7 +3,7 @@ const path = require('path');
 
 function readMarkdownFiles(contentDir) {
     const mdFiles = [];
-    const orderedFiles = ['cover.md', 'about.md', 'nav.md', 'blogs', 'memos', 'friends.md'];
+    const orderedFiles = ['blogs', 'memos', 'friends.md'];
 
     for (const item of orderedFiles) {
         const itemPath = path.join(contentDir, item);

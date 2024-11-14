@@ -11,88 +11,25 @@
 <body>
 	<div id="menu">
 		<i class="icon" id="content-table"></i>
-		<i class="icon" id="github"></i>
-		<i class="icon" id="email"></i>
+		<a class="icon" id="github" href="https://github.com/Mingaaaaaaa"></a>
+		<a class="icon" id="email" href="mailto:mingaaaa@outlook.com"></a>
 		<i class="icon" id="rss"></i>
 	</div>
 
-	<div id="book"></div>
-
-
-	<div id="slider">
-
+	<div class="nav-buttons">
+		<div id="prev-btn" class="nav-btn"></div>
+		<div id="book"></div>
+		<div id="next-btn" class="nav-btn"></div>
 	</div>
 
-	<script type="text/javascript">
-		var numberOfPages = 1000;
+	<div id="slider-wrap">
+		<div id="slider">
+			<div id="cur" draggable="true"></div>
+		</div>
+	</div>
 
-		// Adds the pages that the book will need
-		function addPage(page, book) {
-			// 	First check if the page is already in the book
-			if (!book.turn('hasPage', page)) {
-				// Create an element for this page
-				var element = $('<div />', { 'class': 'page ' + ((page % 2 == 0) ? 'odd' : 'even'), 'id': 'page-' + page }).html('<i class="loader"></i>');
-				// If not then add the page
-				book.turn('addPage', element, page);
-				// 修改加载逻辑，根据页码加载对应的文件
-				$.get(`pages/${page}.html`, function (data) {
-					element.html(data);
-				}).fail(function () {
-					// 如果特定页面文件不存在，回退到默认的output.html
-					element.html('<div class="data">Data for page ' + page + '</div>');
-				});
-			}
-		}
-		function getViewNumber(book, page) {
-			return parseInt((page || book.turn('page')) / 2 + 1, 10);
-		}
-		$(window).ready(function () {
-			$('#book').turn({
-				pages: 112,
-				width: 960,
-				height: 600,
-				elevation: 50,
-				duration: 1000,
-				autoCenter: true,
-				acceleration: true,
-				pages: numberOfPages,
-				gradients: !$.isTouch,
-				when: {
-					turning: function (e, page, view) {
-						var range = $(this).turn('range', page);
-						// Check if each page is within the book
-						for (page = range[0]; page <= range[1]; page++)
-							addPage(page, $(this));
-					},
-					start: function (e, pageObj, corner) {
-						var book = $(this);
-						if (pageObj.page == 2)
-							book.css({ backgroundPosition: '482px 0' });
-						else if (pageObj.page == book.turn('pages') - 1)
-							book.css({ backgroundPosition: '472px 0' });
-					},
-					end: function (e, pageObj) {
-						console.log('end')
-						var book = $(this);
-						bookshelf.moveBar(false);
-					},
-					turned: function (e, page, view) {
-						var book = $(this),
-							pages = book.turn('pages');
-					}
-				}
-			});
-
-		});
-
-		$(window).bind('keydown', function (e) {
-			if (e.target && e.target.tagName.toLowerCase() != 'input')
-				if (e.keyCode == 37)
-					$('#book').turn('previous');
-				else if (e.keyCode == 39)
-					$('#book').turn('next');
-		});
-	</script>
+	<script src="./script.js"></script>
+	<script src="./viewpic.js"></script>
 </body>
 
 </html>

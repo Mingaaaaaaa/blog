@@ -3,9 +3,6 @@ const path = require('path');
 
 // Output HTML files (paginated)
 function outputHtmlFiles(partitions, outputDir, title) {
-    if (!fs.existsSync(outputDir)) {
-        fs.mkdirSync(outputDir, { recursive: true });
-    }
     const fileCount = fs.readdirSync(outputDir).length;
     partitions.forEach((partition, index) => {
         const pageNumber = fileCount + index + 1;
@@ -22,6 +19,7 @@ function outputHtmlFiles(partitions, outputDir, title) {
         const outputFilePath = path.join(outputDir, `${pageNumber}.html`);
         fs.writeFileSync(outputFilePath, finalHtml, 'utf-8');
     });
+    return fileCount+1
 }
 
 exports.outputHtmlFiles = outputHtmlFiles;

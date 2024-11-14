@@ -1,1 +1,46 @@
-<div class="book-content"><p>nav</p></div><div class="page-number">3</div>
+<div class="book-content">
+    <div id="p3">
+        <h2 class="navi">关于 <span id="about-page">2</span></h2>
+        <div id="list-wrap">
+            <div id="blog">
+                <h2>博客</h2>
+                <span class="desc">最近在学什么呢🧑🏻‍💻</span>
+                <div id="blog-list">
+                </div>
+            </div>
+            <div id="divider"></div>
+            <div id="memo">
+                <h2>日记</h2>
+                <span class="desc">不定期分享日常👀</span>
+                <div id="memo-list">
+                </div>
+            </div>
+        </div>
+        <h2 class="navi">友链</h2>
+    </div>
+</div>
+<div class="page-number">3</div>
+
+<script src="/src/constant.js"></script>
+<script>
+    function showList(files, listId) {
+        files.slice(0, 7).forEach((item, index) => {
+            const listItem = document.createElement('div');
+            listItem.innerHTML = `<div class="navi">
+                                    <p id="mdInfo">
+                                        <span id="mdTitle">${item.title}</span>
+                                        <span id="mdPage">${item.page}</span>
+                                    </p>
+                                  </div>`;
+            listItem.addEventListener('click', () => {
+                $('#book').turn('page', item.page);
+            })
+            document.getElementById(listId).appendChild(listItem);
+        });
+    }
+
+    // 显示最近五条博客
+    showList(blogsFiles, 'blog-list');
+    // 显示最近五条日记
+    showList(memoFiles, 'memo-list');
+</script>

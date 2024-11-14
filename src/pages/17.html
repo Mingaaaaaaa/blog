@@ -1,1 +1,14 @@
-<div class="page-title-even">Tailwind CSS：革命性的原子化CSS框架</div><div class="book-content"><p><p class="no-indent">名叫 tailwind 了，借用其省力的意思。</p></p></div><div class="page-number">17</div>
+<div class="page-title-even">设计模式</div><div class="book-content"><pre><code class="javascript language-javascript">class Observer {
+
+  constructor(name, subject) {
+    this.name = name;
+    if (subject) {
+      subject.addObserver(this);
+    }
+  }
+
+  notified(message) {
+    console.log(this.name, 'got message', message);
+  }
+}
+</code></pre></div><div class="page-number">17</div>

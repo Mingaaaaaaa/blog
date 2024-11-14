@@ -1,0 +1,39 @@
+<div class="page-title-odd">设计模式</div><div class="book-content"><pre><code class="javascript language-javascript">function SingleTon(name){
+    this.name = name;
+    this.instance = null;
+}
+
+SingleTon.getName = (){
+  retur this.name
+}
+SingleTon.getInstance =(name){
+  return  this.instance || ( this.instance = new SingleTon(name))
+}
+
+// 获取对象1
+const a = Singleton.getInstance('a');
+// 获取对象2
+const b = Singleton.getInstance('b');
+// 进行比较
+console.log(a === b);
+
+---------------------
+// 构造函数形式  闭包
+function creatSingleTon(name){
+  this.name = name;
+}
+
+function SingleTon = (function (){
+      var instance = null
+      return function (name){
+            return instanle || (instance = new creatSingleTon(name)         
+      }
+})()
+
+// 创建实例对象1
+const a = new Singleton('a');
+// 创建实例对象2
+const b = new Singleton('b');
+
+console.log(a===b); // true
+</code></pre></div><div class="page-number">22</div>
