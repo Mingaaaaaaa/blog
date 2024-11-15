@@ -40,7 +40,7 @@ body {
     }
 
     .book-content {
-        font-family: "Stempel-Garamond-W01-Roman";
+        font-family: 'Stempel-Garamond-W01-Roman';
         font-size: 16px;
         margin: 52px 40px;
     }
@@ -102,17 +102,17 @@ body {
     }
 
     .odd {
-        background-image: -webkit-linear-gradient(left, #FFF 95%, #ddd 100%);
-        background-image: -moz-linear-gradient(left, #FFF 95%, #ddd 100%);
-        background-image: -o-linear-gradient(left, #FFF 95%, #ddd 100%);
-        background-image: -ms-linear-gradient(left, #FFF 95%, #ddd 100%);
+        background-image: -webkit-linear-gradient(left, #fff 95%, #ddd 100%);
+        background-image: -moz-linear-gradient(left, #fff 95%, #ddd 100%);
+        background-image: -o-linear-gradient(left, #fff 95%, #ddd 100%);
+        background-image: -ms-linear-gradient(left, #fff 95%, #ddd 100%);
     }
 
     .even {
-        background-image: -webkit-linear-gradient(right, #FFF 95%, #ddd 100%);
-        background-image: -moz-linear-gradient(right, #FFF 95%, #ddd 100%);
-        background-image: -o-linear-gradient(right, #FFF 95%, #ddd 100%);
-        background-image: -ms-linear-gradient(right, #FFF 95%, #ddd 100%);
+        background-image: -webkit-linear-gradient(right, #fff 95%, #ddd 100%);
+        background-image: -moz-linear-gradient(right, #fff 95%, #ddd 100%);
+        background-image: -o-linear-gradient(right, #fff 95%, #ddd 100%);
+        background-image: -ms-linear-gradient(right, #fff 95%, #ddd 100%);
     }
 }
 
@@ -155,25 +155,78 @@ body {
 
 .nav-buttons {
     display: flex;
+    left: 50%;
+    position: relative;
+    width: fit-content;
+    transform: translateX(-50%);
+    padding: 13px 25px;
+    border-radius: 5px;
     justify-content: center;
+    background-image: -webkit-linear-gradient(left,
+            #E7E7E7 0% 25%,
+            #80808042 25% 48%,
+            gray 48% 52%,
+            #80808042 52% 75%,
+            #E7E7E7 76% 100%);
+    box-shadow: inset 0 4px 8px rgba(0, 0, 0, 0.2),
+        inset 0 -4px 8px rgba(255, 255, 255, 0.1);
+    background-image: -moz-linear-gradient(left,
+            #E7E7E7 0% 25%,
+            #80808042 25% 48%,
+            gray 48% 52%,
+            #80808042 52% 75%,
+            #E7E7E7 76% 100%);
+    background-image: -o-linear-gradient(left,
+            #E7E7E7 0% 25%,
+            #80808042 25% 48%,
+            gray 48% 52%,
+            #80808042 52% 75%,
+            #E7E7E7 76% 100%);
+    background-image: -ms-linear-gradient(left,
+            #E7E7E7 0% 25%,
+            #80808042 25% 48%,
+            gray 48% 52%,
+            #80808042 52% 75%,
+            #E7E7E7 76% 100%);
+
+    .dep {
+        background-image: url(./assets/pages-depth.png);
+        position: absolute;
+        top: 13px;
+        width: 16px;
+        height: 600px;
+        background-size: cover;
+    }
+
+    #pre-dep {
+        left: 15px;
+        background-position: left 0;
+    }
+
+    #nex-dep {
+        right: 7px;
+        background-position: right 0;
+    }
 
     .nav-btn {
-        background-image: url(./assets/ARROW.svg);
+        background-image: url(./assets/arrow.svg);
         width: 64px;
         height: 64px;
         background-size: contain;
         background-repeat: no-repeat;
-        top: 300px;
-        position: relative;
+        top: 50%;
+        position: absolute;
         z-index: 100;
     }
 
     #prev-btn {
-        transform: rotateY(180deg) translateX(-40px);
+        transform: rotateY(180deg);
+        left: 20%;
     }
 
     #next-btn {
         transform: translateX(-40px);
+        left: 80%;
     }
 }
 
@@ -328,7 +381,4 @@ body {
             font-size: 14px;
         }
     }
-
-
-
 }

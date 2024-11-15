@@ -45,7 +45,6 @@ function init() {
     function getViewNumber(book, page) {
         return parseInt((page || book.turn('page')) / 2 + 1, 10);
     }
-
     function initBook() {
         $('#book').turn({
             pages: numberOfPages,
@@ -56,6 +55,8 @@ function init() {
             autoCenter: true,
             acceleration: true,
             gradients: !$.isTouch,
+            turnCorners: true,
+            corners: 'all',
             when: {
                 turning: function (e, page, view) {
                     let tp = page;
@@ -75,6 +76,11 @@ function init() {
                         book.css({ backgroundPosition: '482px 0' });
                     else if (pageObj.page == book.turn('pages') - 1)
                         book.css({ backgroundPosition: '472px 0' });
+                    // 根据总页数调整深度变化的步长
+                    var leftDepth = 17 - (pageObj.page - 2) * (17 / numberOfPages);
+                    var rightDepth = 7 + (pageObj.page - 2) * (7 / numberOfPages);
+                    $('#pre-dep').css('left', leftDepth < 7 ? 7 : leftDepth + 'px');
+                    $('#nex-dep').css('right', rightDepth + 'px');
                 },
                 turned: function () {
                     initImageViewer()
