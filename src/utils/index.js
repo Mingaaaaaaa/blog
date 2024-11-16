@@ -66,7 +66,8 @@ const preservedFiles = ['1.html', '2.html', '3.html'];
   blogsFiles.sort((a, b) => new Date(b.lastModif) - new Date(a.lastModif));
 
   // 生成 constant.js 内容
-  const constantContent = generateConstantContent(memoFiles, blogsFiles);
+  const fileCount = fs.readdirSync(outputDir).length;
+  const constantContent = generateConstantContent(memoFiles, blogsFiles, fileCount);
   fs.writeFileSync(path.join(__dirname, '..', 'constant.js'), constantContent, 'utf-8');
 
   //rss

@@ -14,8 +14,8 @@ const getFileList = (dir) => {
     return files.map(file => getFileInfo(file, dir));
 };
 
-const generateConstantContent = (memoFiles, blogsFiles) => {
-    const constantContent = `var memoFiles = [${memoFiles.map(file => JSON.stringify(file)).join(', ')}];\nvar blogsFiles = [${blogsFiles.map(file => JSON.stringify(file)).join(', ')}];`;
+const generateConstantContent = (memoFiles, blogsFiles, numberOfPages) => {
+    const constantContent = `var memoFiles = [${memoFiles.map(file => JSON.stringify(file)).join(', ')}];\nvar blogsFiles = [${blogsFiles.map(file => JSON.stringify(file)).join(', ')}];\nvar numberOfPages = ${numberOfPages};`;
     return constantContent;
 };
 

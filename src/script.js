@@ -1,30 +1,16 @@
-// 获取pages目录下的文件总数
-var numberOfPages = 0;
-var slider = $('#slider');
-var cur = $('#cur');
-var isDragging = false;
-var startX, sliderLeft;
 var sliderWidth;
 var targetPage = 0;
+var startX, sliderLeft;
+var isDragging = false;
+var numberOfPages = 100;
+
+var cur = $('#cur');
+var slider = $('#slider');
+sliderWidth = slider.width() - cur.width();
+sliderLeft = slider.offset().left;
 
 function init() {
-    $.ajax({
-        url: 'pages/',
-        async: false,
-        success: function (data) {
-            // 计算HTML文件数量
-            var regex = /href="[^"]*\.html"/g;
-            var matches = data.match(regex);
-            numberOfPages = matches ? matches.length : 0;
 
-            // 初始化滑块宽度
-            sliderWidth = slider.width() - cur.width();
-            // 初始化slider的左边距
-            sliderLeft = slider.offset().left;
-        }
-    });
-
-    // Adds the pages that the book will need
     function addPage(page, book) {
         // 	First check if the page is already in the book
         if (!book.turn('hasPage', page)) {
@@ -33,7 +19,7 @@ function init() {
             // If not then add the page
             book.turn('addPage', element, page);
             // 修改加载逻辑，根据页码加载对应的文件
-            $.get(`pages/${page}.html`, function (data) {
+            $.get(`/src/pages/${page}.html`, function (data) {
                 element.html(data);
             }).fail(function () {
                 // 如果特定页面文件不存在，回退到默认的output.html
@@ -45,6 +31,7 @@ function init() {
     function getViewNumber(book, page) {
         return parseInt((page || book.turn('page')) / 2 + 1, 10);
     }
+
     function initBook() {
         $('#book').turn({
             pages: numberOfPages,
@@ -177,7 +164,6 @@ function init() {
         });
     }
 
-    // 检查URL参数，跳转到指定页面
     function checkUrlParams() {
 
         var urlParams = new URLSearchParams(window.location.search);
