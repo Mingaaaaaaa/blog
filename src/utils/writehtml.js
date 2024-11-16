@@ -19,7 +19,7 @@ function outputHtmlFiles(partitions, outputDir, title) {
         const outputFilePath = path.join(outputDir, `${pageNumber}.html`);
         fs.writeFileSync(outputFilePath, finalHtml, 'utf-8');
     });
-    return fileCount+1
+    return fileCount + 1
 }
 
 exports.outputHtmlFiles = outputHtmlFiles;

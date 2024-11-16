@@ -51,6 +51,20 @@ async function initializeBrowser(containerWidth) {
         </body>
         </html>
     `);
+    // 获取浏览器环境信息
+    const browserConfig = await page.evaluate(() => ({
+        userAgent: navigator.userAgent,
+        screenResolution: {
+            width: window.screen.width,
+            height: window.screen.height,
+        },
+        colorDepth: window.screen.colorDepth,
+        devicePixelRatio: window.devicePixelRatio,
+        language: navigator.language,
+        platform: navigator.platform,
+    }));
+
+    console.log('Browser Configuration:', browserConfig);
     return { browser, page };
 }
 
@@ -89,12 +103,11 @@ async function getElementHeight(page, elementHtml, limitWidth) {
 
         const element = tempDiv.firstElementChild;
         const computedStyle = window.getComputedStyle(element);
-        const marginTop = parseFloat(computedStyle.marginTop);
         const marginBottom = parseFloat(computedStyle.marginBottom);
         const height = element.getBoundingClientRect().height;
 
         document.body.removeChild(tempDiv);
-        console.log('Top-level element:', html, height, marginTop, marginBottom);
+        console.log('Top-level element:', html, height, marginBottom);
         return height + marginBottom;
     }, elementHtml, limitWidth);
 

@@ -32,7 +32,6 @@ function initImageViewer() {
             `;
             modal.style.transform = 'translate(-50%, -50%) scale(0)';
             document.body.appendChild(modal);
-            console.log(e.clientX, e.clientY)
             // 创建一个图片元素
             const modalImg = document.createElement('img');
             modalImg.src = this.src;
