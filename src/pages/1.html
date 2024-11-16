@@ -16,11 +16,8 @@
     // 监听图片加载完成
     imgElement.onload = function () {
       $('#book').css('transform', 'translateX(0px)');
-      setTimeout(() => {
-        $('#book').turn('page', 2);
-      }, 1000);
     };
-    
+
     imgElement.src = coverImage;
  
   </script>

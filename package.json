@@ -1,6 +1,7 @@
 {
   "dependencies": {
     "puppeteer": "^23.6.1",
+    "rss": "^1.2.2",
     "showdown": "^2.1.0"
   }
 }

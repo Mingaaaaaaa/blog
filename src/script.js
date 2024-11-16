@@ -177,12 +177,25 @@ function init() {
         });
     }
 
-   
+    // 检查URL参数，跳转到指定页面
+    function checkUrlParams() {
+
+        var urlParams = new URLSearchParams(window.location.search);
+        var page = urlParams.get('page');
+        if (page && page > 0 && page <= numberOfPages && !isNaN(page)) {
+            $('#book').turn('page', page);
+        } else {
+            $('#book').turn('page', 2);
+        }
+    }
 
     $(window).ready(function () {
         initBook();
         initEvents();
         initKeydown();
+        setTimeout(() => {
+            checkUrlParams();
+        }, 1000);
     });
 }
 init()
