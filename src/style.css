@@ -202,7 +202,7 @@ body {
     }
 
     .nav-btn {
-        background-image: url(./assets/arrow.svg);
+        background-image: url(./assets/nav-btn.svg);
         width: 64px;
         height: 64px;
         background-size: contain;
