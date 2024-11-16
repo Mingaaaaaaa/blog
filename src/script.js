@@ -12,17 +12,13 @@ sliderLeft = slider.offset().left;
 function init() {
 
     function addPage(page, book) {
-        // 	First check if the page is already in the book
         if (!book.turn('hasPage', page)) {
             // Create an element for this page
             var element = $('<div />', { 'class': 'page ' + ((page % 2 == 0) ? 'odd' : 'even'), 'id': 'page-' + page }).html('<i class="loader"></i>');
-            // If not then add the page
             book.turn('addPage', element, page);
-            // 修改加载逻辑，根据页码加载对应的文件
             $.get(`./src/pages/${page}.html`, function (data) {
                 element.html(data);
             }).fail(function () {
-                // 如果特定页面文件不存在，回退到默认的output.html
                 element.html('<div class="data">Data for page ' + page + '</div>');
             });
         }

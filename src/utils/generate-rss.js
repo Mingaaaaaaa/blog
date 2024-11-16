@@ -2,7 +2,7 @@ const fs = require('fs');
 const RSS = require('rss');
 const path = require('path');
 
-const siteUrl = 'https://mingaaaaaaa.github.io/blog/src/index.html'
+const siteUrl = 'https://mingaaaaaaa.github.io/blog/index.html'
 const rssFilePath = path.join(__dirname, '..', '..', 'rss.xml');
 
 const feed = new RSS({
