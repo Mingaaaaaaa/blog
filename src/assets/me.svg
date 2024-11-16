@@ -73,7 +73,7 @@ l112 5 61 -37 c34 -21 87 -62 119 -91 32 -29 76 -62 98 -73 43 -23 136 -48
   <style>
   
     path{
-      animation: draw 3s ease forwards 2s, color 2s ease forwards 4s;
+      animation: draw 5s ease infinite 4s, color 2s ease infinite 7s;
       stroke-dashoffset: 0;
     }
     .head {
@@ -90,7 +90,7 @@ l112 5 61 -37 c34 -21 87 -62 119 -91 32 -29 76 -62 98 -73 43 -23 136 -48
       stroke-dashoffset: 356;
     }
     @keyframes color{
-          from{
+        from{
             fill:white
         }
         to{

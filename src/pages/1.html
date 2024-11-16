@@ -1,5 +1,5 @@
 <div class="book-content">
-    <img src="" alt="" id="coverImage" style="
+  <img src="" alt="" id="coverImage" style="
       width: 300px;
       max-height: 350px;
       object-fit: cover;
@@ -7,12 +7,24 @@
       left: 50%;
       transform: translateX(-50%);
     " />
-    <script>
-        let randomNumber = Math.floor(Math.random() * 8) + 1;
-        let coverImage = `https://cdn.jsdelivr.net/gh/Mingaaaaaaa/PictureBed@master/blog-covers/cover${randomNumber}.webp`;
-        document.getElementById('coverImage').src = coverImage;
-    </script>
-    <div style="
+  <script>
+    // 动态生成随机封面
+    let randomNumber = Math.floor(Math.random() * 8) + 1;
+    let coverImage = `https://cdn.jsdelivr.net/gh/Mingaaaaaaa/PictureBed@master/blog-covers/cover${randomNumber}.webp`;
+    let imgElement = document.getElementById('coverImage');
+
+    // 监听图片加载完成
+    imgElement.onload = function () {
+      $('#book').css('transform', 'translateX(0px)');
+      setTimeout(() => {
+        $('#book').turn('page', 2);
+      }, 1000);
+    };
+    
+    imgElement.src = coverImage;
+ 
+  </script>
+  <div style="
       font-family: cursive;
       text-align: center;
       width: fit-content;
@@ -22,9 +34,8 @@
       left: 50%;
       transform: translateX(-50%);
     ">
-        我有明珠一颗 久被尘劳关锁
-        待得尘尽光生 照破山河万朵
-    </div>
+    我有明珠一颗 久被尘劳关锁
+    待得尘尽光生 照破山河万朵
+  </div>
 </div>
-
 <div class="page-number">1</div>

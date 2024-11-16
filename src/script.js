@@ -51,7 +51,7 @@ function init() {
             width: 960,
             height: 600,
             elevation: 50,
-            duration: 1300,
+            duration: 1100,
             autoCenter: true,
             acceleration: true,
             gradients: !$.isTouch,
@@ -65,22 +65,30 @@ function init() {
                     for (tp = range[0]; tp <= range[1]; tp++)
                         addPage(tp, $(this));
 
+                    // 如果当前是 0/1，隐藏 pre-dep 和 prev-btn
+                    if (page <= 1) {
+                        $('#pre-dep, #prev-btn').hide();
+                        $('#nex-dep').hide();
+                    } else {
+                        $('#pre-dep, #prev-btn').fadeIn(700);
+                        $('#nex-dep').fadeIn(700);
+                    }
+
                     // 更新滑块位置
-                    console.log(getViewNumber($(this), page), getViewNumber($(this), (numberOfPages)))
                     var position = getViewNumber($(this), page) * sliderWidth / getViewNumber($(this), (numberOfPages));
                     cur.css('margin-left', position + 'px');
-                },
-                start: function (e, pageObj, corner) {
-                    var book = $(this);
-                    if (pageObj.page == 2)
-                        book.css({ backgroundPosition: '482px 0' });
-                    else if (pageObj.page == book.turn('pages') - 1)
-                        book.css({ backgroundPosition: '472px 0' });
-                    // 根据总页数调整深度变化的步长
-                    var leftDepth = 17 - (pageObj.page - 2) * (17 / numberOfPages);
-                    var rightDepth = 7 + (pageObj.page - 2) * (7 / numberOfPages);
-                    $('#pre-dep').css('left', leftDepth < 7 ? 7 : leftDepth + 'px');
-                    $('#nex-dep').css('right', rightDepth + 'px');
+                    // 根据总页数调整深度变化的步长，并添加简单过渡
+
+                    let leftDepth = 20 - (page - 1) * (13 / numberOfPages);
+                    let rightDepth = 7 + (page - 1) * (13 / numberOfPages);
+                    // 渐变透明后调整位置并显示
+                    // 动态调整位置并添加缓冲效果
+                    $('#pre-dep')
+                        .animate({ left: leftDepth + 'px' }, 300);  // 平滑移动到目标位置
+
+                    $('#nex-dep')
+                        .animate({ right: rightDepth + 'px' }, 300);
+
                 },
                 turned: function () {
                     initImageViewer()
@@ -169,15 +177,12 @@ function init() {
         });
     }
 
-
+   
 
     $(window).ready(function () {
         initBook();
         initEvents();
         initKeydown();
-        setTimeout(() => {
-            $('#book').turn('page', 2);
-        }, 1300);
     });
 }
 init()

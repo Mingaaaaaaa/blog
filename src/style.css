@@ -3,20 +3,10 @@ body {
     overflow: hidden;
 }
 
-@keyframes openBook {
-    from {
-        transform: translateX(-480px);
-    }
-
-    to {
-        transform: translateX(0px);
-    }
-}
 
 #book {
-    animation-name: openBook;
-    animation-duration: 1s;
-    animation-timing-function: ease;
+    transform: translateX(-480px);
+    transition: transform 0.8s ease;
 
     .turn-page {
         background-color: white;
@@ -154,53 +144,56 @@ body {
 }
 
 .nav-buttons {
-    display: flex;
     left: 50%;
+    display: flex;
     position: relative;
     width: fit-content;
-    transform: translateX(-50%);
-    padding: 13px 25px;
+    padding: 12px 25px;
     border-radius: 5px;
     justify-content: center;
+    transform: translateX(-50%);
+    box-shadow: inset 0 4px 8px rgba(0, 0, 0, 0.2),
+        inset 0 -4px 8px rgba(255, 255, 255, 0.1);
     background-image: -webkit-linear-gradient(left,
             #E7E7E7 0% 25%,
             #80808042 25% 48%,
             gray 48% 52%,
             #80808042 52% 75%,
-            #E7E7E7 76% 100%);
-    box-shadow: inset 0 4px 8px rgba(0, 0, 0, 0.2),
-        inset 0 -4px 8px rgba(255, 255, 255, 0.1);
+            #E7E7E7 75% 100%);
     background-image: -moz-linear-gradient(left,
             #E7E7E7 0% 25%,
             #80808042 25% 48%,
             gray 48% 52%,
             #80808042 52% 75%,
-            #E7E7E7 76% 100%);
+            #E7E7E7 75% 100%);
     background-image: -o-linear-gradient(left,
             #E7E7E7 0% 25%,
             #80808042 25% 48%,
             gray 48% 52%,
             #80808042 52% 75%,
-            #E7E7E7 76% 100%);
+            #E7E7E7 75% 100%);
     background-image: -ms-linear-gradient(left,
             #E7E7E7 0% 25%,
             #80808042 25% 48%,
             gray 48% 52%,
             #80808042 52% 75%,
-            #E7E7E7 76% 100%);
+            #E7E7E7 75% 100%);
 
     .dep {
-        background-image: url(./assets/pages-depth.png);
-        position: absolute;
         top: 13px;
         width: 16px;
         height: 600px;
+        z-index: -1;
+        position: absolute;
         background-size: cover;
+        transition: all 0.5s ease;
+        background-image: url(./assets/pages-depth.png);
     }
 
     #pre-dep {
         left: 15px;
         background-position: left 0;
+
     }
 
     #nex-dep {
@@ -221,12 +214,12 @@ body {
 
     #prev-btn {
         transform: rotateY(180deg);
-        left: 20%;
+        left: 1%;
     }
 
     #next-btn {
         transform: translateX(-40px);
-        left: 80%;
+        left: 97%;
     }
 }
 
