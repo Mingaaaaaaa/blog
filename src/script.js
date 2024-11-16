@@ -19,7 +19,7 @@ function init() {
             // If not then add the page
             book.turn('addPage', element, page);
             // 修改加载逻辑，根据页码加载对应的文件
-            $.get(`/src/pages/${page}.html`, function (data) {
+            $.get(`./src/pages/${page}.html`, function (data) {
                 element.html(data);
             }).fail(function () {
                 // 如果特定页面文件不存在，回退到默认的output.html
