@@ -1,1 +1,23 @@
-<div class="book-content"><h1 class="p-title">你好，博客</h1><p class="create-time"> 2024/11/16</p><p>hello，world！</p><p>自从实习结束后，生活又惬意起来了！国庆去了金华的亲戚家住了几天，把横店玩了一遍，后面陪朋友在南京逛了几天，又一起去大连爽玩，美滋滋。</p><p></p></div><div class="page-number">16</div>
+<div class="page-title-odd">test</div><div class="book-content"><pre><code>            const modal = document.createElement('div');
+            modal.classList.add('modal');
+            modal.style = `
+                position: fixed; 
+                z-index: 100; 
+                width: 40%; 
+                height: 50%; 
+                background: rgba(0, 0, 0, 0.5); 
+                display: block; 
+                opacity: 0;
+                padding:14px;
+                left: ${e.clientX}px;
+                top: ${e.clientY}px;
+                transition: all 0.5s ease-in-out;
+            `;
+            modal.style.transform = 'translate(-50%, -50%) scale(0)';
+            document.body.appendChild(modal);
+            // 创建一个图片元素
+            const modalImg = document.createElement('img');
+            modalImg.src = this.src;
+            modalImg.style = "max-width: 100%; max-height: 100%; margin: auto; display: block;";
+            modal.appendChild(modalImg);
+</code></pre></div><div class="page-number">16</div>

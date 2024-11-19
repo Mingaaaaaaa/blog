@@ -1,7 +1,7 @@
 const puppeteer = require('puppeteer');
 
 // 初始化浏览器和页面
-async function initializeBrowser(containerWidth) {
+async function initializeBrowser() {
     const browser = await puppeteer.launch({ headless: false }); // headless: false 可以更好地观察页面
     const page = await browser.newPage();
 
@@ -16,13 +16,11 @@ async function initializeBrowser(containerWidth) {
         <html>
         <head>
             <style>
-  
                 #book {
-                    width: 800px;
-                    height: 500px;
+                    width: 480px;
+                    height: 600px;
                     font-size: 16px;
                     padding: 52px 40px;
-                    font-family: "Stempel-Garamond-W01-Roman";
                 }
 
                 #book p {
@@ -44,27 +42,13 @@ async function initializeBrowser(containerWidth) {
                     font-size: 16px;
                     text-indent: 2em;
                 }
- 
             </style>
         </head>
         <body id="book">
         </body>
         </html>
     `);
-    // 获取浏览器环境信息
-    const browserConfig = await page.evaluate(() => ({
-        userAgent: navigator.userAgent,
-        screenResolution: {
-            width: window.screen.width,
-            height: window.screen.height,
-        },
-        colorDepth: window.screen.colorDepth,
-        devicePixelRatio: window.devicePixelRatio,
-        language: navigator.language,
-        platform: navigator.platform,
-    }));
 
-    console.log('Browser Configuration:', browserConfig);
     return { browser, page };
 }
 
@@ -78,7 +62,6 @@ async function getElementHeight(page, elementHtml, limitWidth) {
         // Wait for each image to load
         const images = Array.from(tempDiv.querySelectorAll('img'));
         const promises = images.map(img => {
-            console.log('imgxx', JSON.stringify(img), img.style.height, img.height)
             return new Promise(resolve => {
                 if (img.complete) {
                     resolve();
@@ -152,7 +135,6 @@ async function getElementsInfo(page, htmlString, limitWidth) {
         }));
     }, htmlString, limitWidth);
 
-    // 为每个元素获取高度
     for (let element of elements) {
         element.height = await getElementHeight(page, element.html, limitWidth);
     }
@@ -161,7 +143,7 @@ async function getElementsInfo(page, htmlString, limitWidth) {
 }
 
 // 处理分行
-async function splitParagraphIntoTwoParts(page, content, containerWidth, leftHeight) {
+async function splitElementIntoTwoParts(page, content, containerWidth, leftHeight) {
     await page.setContent(`
         <div class="split-container" style="width: ${containerWidth}px;">${content}</div>
     `);
@@ -215,55 +197,101 @@ async function splitParagraphIntoTwoParts(page, content, containerWidth, leftHei
                 }
 
             } else if (node.nodeType === Node.ELEMENT_NODE) {
-                if (node.tagName === 'IMG') {
-                    // 处理图片
-                    const originalHeight = node.getBoundingClientRect().height;
-                    const originalWidth = node.getBoundingClientRect().width;
-                    const remainingSpace = leftHeight - cumulativeHeight;
+                console.log(node.tagName + "!!!")
+                switch (node.tagName) {
+                    case 'IMG':
+                        // 处理图片
+                        const originalHeight = node.getBoundingClientRect().height;
+                        const originalWidth = node.getBoundingClientRect().width;
+                        const remainingSpace = leftHeight - cumulativeHeight;
 
-                    if (remainingSpace < originalHeight * 0.3) {
-                        // 剩余空间不足,移至下一页
-                        nexContent += node.outerHTML;
-                    } else if (originalHeight > leftHeight) {
-                        // 图片过高,等比缩放
-                        const scaledImg = node.cloneNode(true);
-                        if (originalWidth > container.clientWidth) {
-                            scaledImg.style.width = '100%';
+                        if (remainingSpace < originalHeight * 0.3) {
+                            // 剩余空间不足,移至下一页
+                            nexContent += node.outerHTML;
+                        } else if (originalHeight > leftHeight) {
+                            // 图片过高,等比缩放
+                            const scaledImg = node.cloneNode(true);
+                            if (originalWidth > container.clientWidth) {
+                                scaledImg.style.width = '100%';
+                            }
+                            curContent += scaledImg.outerHTML;
+                            cumulativeHeight += leftHeight;
+                        } else if (remainingSpace < originalHeight) {
+                            // 剩余空间不足,等比缩放
+                            const scaledImg = node.cloneNode(true);
+                            const scale = remainingSpace / originalHeight;
+                            scaledImg.style.transform = `scale(${scale})`;
+                            scaledImg.style.transformOrigin = 'top left';
+                            if (originalWidth > container.clientWidth) {
+                                scaledImg.style.width = '100%';
+                            }
+                            curContent += scaledImg.outerHTML;
+                            cumulativeHeight += remainingSpace;
+                        } else {
+                            // 空间充足,直接放置
+                            const scaledImg = node.cloneNode(true);
+                            if (originalWidth > container.clientWidth) {
+                                scaledImg.style.width = '100%';
+                            }
+                            curContent += scaledImg.outerHTML;
+                            cumulativeHeight += originalHeight;
                         }
-                        curContent += scaledImg.outerHTML;
-                        cumulativeHeight += leftHeight;
-                    } else if (remainingSpace < originalHeight) {
-                        // 剩余空间不足,等比缩放
-                        const scaledImg = node.cloneNode(true);
-                        const scale = remainingSpace / originalHeight;
-                        scaledImg.style.transform = `scale(${scale})`;
-                        scaledImg.style.transformOrigin = 'top left';
-                        if (originalWidth > container.clientWidth) {
-                            scaledImg.style.width = '100%';
-                        }
-                        curContent += scaledImg.outerHTML;
-                        cumulativeHeight += remainingSpace;
-                    } else {
-                        // 空间充足,直接放置
-                        const scaledImg = node.cloneNode(true);
-                        if (originalWidth > container.clientWidth) {
-                            scaledImg.style.width = '100%';
-                        }
-                        curContent += scaledImg.outerHTML;
-                        cumulativeHeight += originalHeight;
-                    }
-                } else {
-                    // 处理其他元素
-                    const childHtml = node.outerHTML;
-                    const nodeHeight = measureHeight(childHtml);
+                        break;
+                    case 'CODE':
+                        // 处理pre标签里的子元素code
+                        const codeElement = node;
+                        if (codeElement) {
+                            const codeContent = codeElement.textContent;
+                            const codeLines = codeContent.split('\n');
+                            let codeLineIndex = 0;
+                            let codeLineHeight = 20; // 一行默认25px
+                            let codeLineContent = '';
 
-                    if (cumulativeHeight + nodeHeight <= leftHeight) {
-                        curContent += childHtml;
-                        cumulativeHeight += nodeHeight;
-                    } else {
-                        // 添加no-indent类到下一页内容
-                        nexContent += childHtml.replace(/<p/g, '<p class="no-indent"');
-                    }
+                            while (codeLineIndex < codeLines.length) {
+                                codeLineContent += codeLines[codeLineIndex] + '\n';
+                                const codeLineHtml = `<pre><code>${codeLineContent}</code></pre>`;
+
+                                if (cumulativeHeight + codeLineHeight > leftHeight) {
+                                    // 超出高度限制,回退到上一行
+                                    codeLineContent = codeLineContent.slice(0, -1);
+                                    // 将剩余代码添加到下一页,添加no-indent类
+                                    nexContent += `<code>${codeLines.slice(codeLineIndex).join('\n')}</code>`;
+                                    break;
+                                } else {
+                                    cumulativeHeight += codeLineHeight;
+                                    codeLineIndex++;
+                                }
+                            }
+
+                            if (codeLineContent) {
+                                curContent += `<pre><code>${codeLineContent}</code></pre>`;
+                            }
+                        } else {
+                            // 处理其他元素
+                            const childHtml = node.outerHTML;
+                            const nodeHeight = measureHeight(childHtml);
+
+                            if (cumulativeHeight + nodeHeight <= leftHeight) {
+                                curContent += childHtml;
+                                cumulativeHeight += nodeHeight;
+                            } else {
+                                // 添加no-indent类到下一页内容
+                                nexContent += childHtml.replace(/<p/g, '<p class="no-indent"');
+                            }
+                        }
+                        break;
+                    default:
+                        // 处理其他元素
+                        const childHtml = node.outerHTML;
+                        const nodeHeight = measureHeight(childHtml);
+
+                        if (cumulativeHeight + nodeHeight <= leftHeight) {
+                            curContent += childHtml;
+                            cumulativeHeight += nodeHeight;
+                        } else {
+                            // 添加no-indent类到下一页内容
+                            nexContent += childHtml.replace(/<p/g, '<p class="no-indent"');
+                        }
                 }
             }
         };
@@ -289,6 +317,7 @@ async function getLineHeight(page, lineHtml, limitWidth) {
     return await page.evaluate((html, limitWidth) => {
         const tempDiv = document.createElement('div');
         tempDiv.style.width = `${limitWidth}px`;
+        tempDiv.style.whiteSpace = 'pre-wrap'; // 设置一个 style
         tempDiv.innerHTML = html;
         document.body.appendChild(tempDiv);
         const height = tempDiv.getBoundingClientRect().height;
@@ -296,7 +325,6 @@ async function getLineHeight(page, lineHtml, limitWidth) {
         return height;
     }, lineHtml, limitWidth);
 }
-
 // 主函数：按高度分割HTML
 async function partitionHtmlByHeightWithFixedWidth(htmlString, targetHeight, containerWidth) {
     const { browser, page } = await initializeBrowser(containerWidth);
@@ -306,35 +334,55 @@ async function partitionHtmlByHeightWithFixedWidth(htmlString, targetHeight, con
     let currentPartition = [];
 
     let index = 0;
-
     while (index < elements.length) {
         let element = elements[index];
         console.log(element.tag, element.content, element.height, targetHeight - currentHeight);
 
         if (currentHeight + element.height > targetHeight) {
-            if (element.tag === 'p') {
-                let remainingContent = element.content;
-                while (remainingContent) {
-                    const lines = await splitParagraphIntoTwoParts(page, remainingContent, containerWidth, targetHeight - currentHeight);
-                    console.log('lines', lines);
-                    let [curContent, overflowContent] = lines;
+            switch (element.tag) {
+                case 'p':
+                    let remainingContent = element.content;
+                    while (remainingContent) {
+                        const lines = await splitElementIntoTwoParts(page, remainingContent, containerWidth, targetHeight - currentHeight);
+                        console.log('split into two part', lines);
+                        let [curContent, overflowContent] = lines;
+                        currentPartition.push(`<p>${curContent}</p>`);
+                        currentHeight += await getLineHeight(page, `<p>${curContent}</p>`, containerWidth);
 
-                    currentPartition.push(`<p>${curContent}</p>`);
-                    currentHeight += await getLineHeight(page, `<p>${curContent}</p>`, containerWidth);
-
-                    if (overflowContent) {
-                        result.push(currentPartition);
-                        remainingContent = overflowContent;
-                        currentPartition = [];
-                        currentHeight = 0;
-                    } else {
-                        remainingContent = null;
+                        if (overflowContent) {
+                            result.push(currentPartition);
+                            remainingContent = overflowContent;
+                            currentPartition = [];
+                            currentHeight = 0;
+                        } else {
+                            remainingContent = null;
+                        }
                     }
-                }
-            } else {
-                result.push(currentPartition);
-                currentPartition = [element.html];
-                currentHeight = element.height;
+                    break;
+                case 'pre':
+                    let codeRemainingContent = element.content;
+                    while (codeRemainingContent) {
+                        const codeLines = await splitElementIntoTwoParts(page, codeRemainingContent, containerWidth, targetHeight - currentHeight);
+                        console.log('split into two part', codeLines);
+                        let [curCodeContent, overflowCodeContent] = codeLines;
+                        currentPartition.push(curCodeContent);
+                        currentHeight += await getLineHeight(page, curCodeContent, containerWidth);
+                        console.log('code height', curCodeContent,currentHeight,targetHeight, await getLineHeight(page, `<pre><code>${curCodeContent}</code></pre>`, containerWidth))
+                        if (overflowCodeContent) {
+                            result.push(currentPartition);
+                            codeRemainingContent = overflowCodeContent;
+                            currentPartition = [];
+                            currentHeight = 0;
+                        } else {
+                            codeRemainingContent = null;
+                        }
+                    }
+                    break;
+                default:
+                    result.push(currentPartition);
+                    currentPartition = [element.html];
+                    currentHeight = element.height;
+                    break;
             }
         } else {
             currentHeight += element.height;

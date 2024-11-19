@@ -70,10 +70,15 @@ function init() {
                     $('#nex-dep')
                         .animate({ right: rightDepth + 'px' }, 300);
                 },
+                start: function () {
+                    console.log('start')
+                    hljs.highlightAll()
+                },
                 turned: function (e, page) {
                     initImageViewer()
+                    hljs.highlightAll()
                     if (page === 2) {
-                        let svgPath= `./src/assets/me.svg`;
+                        let svgPath = `./src/assets/me.svg`;
                         $('#me-svg').attr('src', svgPath)
                     }
                 }
@@ -164,15 +169,16 @@ function init() {
         let isScrolling = false; // 滚动节流标志
         // 监听滚轮事件（触摸板）
         $(document).on('wheel', function (e) {
+            e.preventDefault(); // 屏蔽浏览器默认行为
             if (isScrolling) return; // 如果正在翻页中，直接返回
 
             const deltaX = e.originalEvent.deltaX;
 
-            if (deltaX > 50) {
+            if (deltaX > 50 && !$(e.target).is('code')) {
                 isScrolling = true;
                 $('#book').turn('next');
                 resetScrollState(); // 重置滚动状态
-            } else if (deltaX < -50) {
+            } else if (deltaX < -50 && !$(e.target).is('code')) {
                 isScrolling = true;
                 $('#book').turn('previous');
                 resetScrollState(); // 重置滚动状态

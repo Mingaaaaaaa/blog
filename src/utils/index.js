@@ -8,7 +8,7 @@ const { partitionHtmlByHeightWithFixedWidth } = require('./splithtml');
 const { getFileInfo, generateConstantContent } = require('./getFileInfo')
 
 const pageHeight = 451; //600-52*2-45
-const pageWidth = 445.5;
+const pageWidth = 400; //480-40*2
 
 const outputDir = path.join(__dirname, '..', 'pages');
 const contentDir = path.join(__dirname, '..', '..', 'content');
