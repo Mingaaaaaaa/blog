@@ -13,13 +13,24 @@
     let coverImage = `https://cdn.jsdelivr.net/gh/Mingaaaaaaa/PictureBed@master/blog-covers/cover${randomNumber}.webp`;
     let imgElement = document.getElementById('coverImage');
 
+    function checkUrlParams() {
+      var urlParams = new URLSearchParams(window.location.search);
+      var page = urlParams.get('page');
+      if (page && page > 0 && page <= numberOfPages && !isNaN(page)) {
+        $('#book').turn('page', page);
+      } else {
+        $('#book').turn('page', 2);
+      }
+    }
     // 监听图片加载完成
     imgElement.onload = function () {
       $('#book').css('transform', 'translateX(0px)');
+      setTimeout(() => {
+        checkUrlParams()
+      }, 1000);
     };
-
     imgElement.src = coverImage;
- 
+
   </script>
   <div style="
       font-family: cursive;

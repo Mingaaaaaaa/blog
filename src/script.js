@@ -14,9 +14,9 @@ function init() {
         if (!book.turn('hasPage', page)) {
             var element = $('<div />', { 'class': 'page ' + ((page % 2 == 0) ? 'odd' : 'even'), 'id': 'page-' + page }).html('<i class="loader"></i>');
             book.turn('addPage', element, page);
-            $.get(`./src/pages/${page}.html`, function(data) {
+            $.get(`./src/pages/${page}.html`, function (data) {
                 element.html(data);
-            }).fail(function() {
+            }).fail(function () {
 
                 element.html('<div class="data">Data for page ' + page + '</div>');
             });
@@ -40,7 +40,7 @@ function init() {
             turnCorners: true,
             corners: 'all',
             when: {
-                turning: function(e, page, view) {
+                turning: function (e, page, view) {
                     let tp = page;
                     let range = $(this).turn('range', page);
                     for (tp = range[0]; tp <= range[1]; tp++)
@@ -70,8 +70,12 @@ function init() {
                     $('#nex-dep')
                         .animate({ right: rightDepth + 'px' }, 300);
                 },
-                turned: function() {
+                turned: function (e, page) {
                     initImageViewer()
+                    if (page === 2) {
+                        let svgPath= `./src/assets/me.svg`;
+                        $('#me-svg').attr('src', svgPath)
+                    }
                 }
             }
         });
@@ -79,16 +83,16 @@ function init() {
 
     function initNaviEvents() {
         // 添加导航按钮事件监听
-        $('#prev-btn').click(function() {
+        $('#prev-btn').click(function () {
             $('#book').turn('previous');
         });
 
-        $('#next-btn').click(function() {
+        $('#next-btn').click(function () {
             $('#book').turn('next');
         });
 
         // 滑块拖拽相关代码
-        cur.on('mousedown', function(e) {
+        cur.on('mousedown', function (e) {
             isDragging = true;
             startX = e.pageX - parseInt(cur.css('margin-left'));
             // 更新sliderLeft,确保获取最新位置
@@ -96,7 +100,7 @@ function init() {
             e.preventDefault(); // 防止文本选中
         });
 
-        $(document).on('mousemove', function(e) {
+        $(document).on('mousemove', function (e) {
             if (isDragging) {
                 e.preventDefault();
                 // 计算相对于slider的位置
@@ -110,7 +114,7 @@ function init() {
             }
         });
 
-        $(document).on('mouseup', function(e) {
+        $(document).on('mouseup', function (e) {
             if (isDragging && targetPage > 0 && targetPage <= numberOfPages) {
                 $('#book').turn('page', targetPage);
             }
@@ -118,7 +122,7 @@ function init() {
         });
 
         // 防止拖出浏览器窗口时无法触发mouseup
-        $(document).on('mouseleave', function(e) {
+        $(document).on('mouseleave', function (e) {
             if (isDragging && targetPage > 0 && targetPage <= numberOfPages) {
                 $('#book').turn('page', targetPage);
             }
@@ -126,7 +130,7 @@ function init() {
         });
 
         // 添加slider点击事件
-        $('#slider-wrap').on('click', function(e) {
+        $('#slider-wrap').on('click', function (e) {
             if (!isDragging) {
                 // 更新sliderLeft,确保获取最新位置
                 sliderLeft = slider.offset().left;
@@ -147,7 +151,7 @@ function init() {
         })
 
         // keyboade navi
-        $(window).bind('keydown', function(e) {
+        $(window).bind('keydown', function (e) {
             if (e.target && e.target.tagName.toLowerCase() != 'input')
                 if (e.keyCode == 37)
                     $('#book').turn('previous');
@@ -159,7 +163,7 @@ function init() {
     function initTouchNavigation() {
         let isScrolling = false; // 滚动节流标志
         // 监听滚轮事件（触摸板）
-        $(document).on('wheel', function(e) {
+        $(document).on('wheel', function (e) {
             if (isScrolling) return; // 如果正在翻页中，直接返回
 
             const deltaX = e.originalEvent.deltaX;
@@ -182,23 +186,9 @@ function init() {
         }
     }
 
-    function checkUrlParams() {
-
-        var urlParams = new URLSearchParams(window.location.search);
-        var page = urlParams.get('page');
-        if (page && page > 0 && page <= numberOfPages && !isNaN(page)) {
-            $('#book').turn('page', page);
-        } else {
-            $('#book').turn('page', 2);
-        }
-    }
-
-    $(window).ready(function() {
+    $(window).ready(function () {
         initBook();
         initNaviEvents();
-        setTimeout(() => {
-            checkUrlParams();
-        }, 1000);
     });
 }
 init()

@@ -71,15 +71,13 @@ l112 5 61 -37 c34 -21 87 -62 119 -91 32 -29 76 -62 98 -73 43 -23 136 -48
 </g>
 
   <style>
-  
     path{
-      animation: draw 4s ease forwards 2s, color 2s ease forwards 5.5s;
       stroke-dashoffset: 0;
+      animation: draw 3s ease forwards, color 2s ease forwards 3s;
     }
     .head {
       stroke-dasharray: 3564; 
       stroke-dashoffset: 3564;
-
     }
     .body {
       stroke-dasharray: 15993; 
