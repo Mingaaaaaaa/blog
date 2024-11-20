@@ -2,13 +2,13 @@ const fs = require('fs');
 const RSS = require('rss');
 const path = require('path');
 
-const siteUrl = 'https://mingaaaaaaa.github.io/blog/index.html'
+const siteUrl = 'alplune.top'
 const rssFilePath = path.join(__dirname, '..', '..', 'rss.xml');
 
 const feed = new RSS({
     title: "Alplune's Blog",
     description: "想成为全栈的前端菜鸟",
-    feed_url: `https://mingaaaaaaa.github.io/blog/rss.xml`,
+    feed_url: `alplune.top/rss.xml`,
     site_url: siteUrl,
     language: 'zh-cn',
     ttl: '60',
