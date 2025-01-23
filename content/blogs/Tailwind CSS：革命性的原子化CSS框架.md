@@ -23,14 +23,14 @@ tailwind 是一个流行的**原子化 css 框架**。
 
 官方解释：
 
-![](https://cdn.jsdelivr.net/gh/Mingaaaaaaa/PictureBed@master/image-(1).webp)
+![](https://cdn.statically.io/gh/Mingaaaaaaa/PictureBed@master/image-(1).webp)
 
 ~~这tm不是和内联css一样丑陋~~~~💩~~~~？~~
 
 <h2 id="GpJmz">原理是？</h2>
 <font style="color:rgb(51, 65, 85);">Tailwind 是一个 PostCSS 插件，</font>预定义了很多 工具类。
 
-![](https://cdn.jsdelivr.net/gh/Mingaaaaaaa/PictureBed@master/image-(2).webp)
+![](https://cdn.statically.io/gh/Mingaaaaaaa/PictureBed@master/image-(2).webp)
 
 <font style="color:rgb(44, 62, 80);">扫描所有HTML文件、JavaScript组件和任何其他模板的类名，生成相应的样式，然后将它们写入静态CSS文件。</font>
 
@@ -44,7 +44,7 @@ tailwind 是一个流行的**原子化 css 框架**。
 PostCSS 包括 CSS 解析器（**praser**），CSS 节点树 API，一个源映射生成器和一个节点树 **stringifier**。
 
 PostCSS 主要的原理核心工作流：
-![](https://cdn.jsdelivr.net/gh/Mingaaaaaaa/PictureBed@master/image-(3).webp)
+![](https://cdn.statically.io/gh/Mingaaaaaaa/PictureBed@master/image-(3).webp)
 
 
 tailwindcss原理。和上面类似，只不过读取的是我们在配置文件设置的匹配的文件，读他们的class，生成对应工具类的css
@@ -68,7 +68,7 @@ tailwindcss原理。和上面类似，只不过读取的是我们在配置文件
 
 <h2 id="Eg9T4">用不用？</h2>
 
-![](https://cdn.jsdelivr.net/gh/Mingaaaaaaa/PictureBed@master/image-(4).webp)
+![](https://cdn.statically.io/gh/Mingaaaaaaa/PictureBed@master/image-(4).webp)
 
 
 <h2 id="BfhFz">技术选型</h2>
@@ -84,7 +84,7 @@ CSS方案只要不是太逆天，其实都可以接受。选择一个CSS框架�
 
 为啥这个 css 框架叫 tailwind 呢？ 因为作者 Adam Wathan喜欢叫做 kiteboarding 风筝冲浪的运动。 就是这样的，一个风筝，一个冲浪板：
 
-![](https://cdn.jsdelivr.net/gh/Mingaaaaaaa/PictureBed@master/image-(5).webp)
+![](https://cdn.statically.io/gh/Mingaaaaaaa/PictureBed@master/image-(5).webp)
 
 
 这种运动在顺风 tailwind 和逆风 headwind 下有不同的技巧。而 tailwind 的时候明显更加省力。 所以就给这个 css 框架起名叫 tailwind 了，借用其省力的意思。

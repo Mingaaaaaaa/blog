@@ -71,12 +71,10 @@ function init() {
                         .animate({ right: rightDepth + 'px' }, 300);
                 },
                 start: function () {
-                    console.log('start')
                     hljs.highlightAll()
                 },
                 turned: function (e, page) {
                     initImageViewer()
-                    hljs.highlightAll()
                     if (page === 2) {
                         let svgPath = `./src/assets/me.svg`;
                         $('#me-svg').attr('src', svgPath)
